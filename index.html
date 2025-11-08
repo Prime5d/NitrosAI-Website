@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NitrosAI - Next-Generation Blockchain Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0A0B14;
+            --primary-darker: #050611;
+            --nitrosai-blue: #00F5FF;
+            --nitrosai-purple: #6E44FF;
+            --nitrosai-pink: #FF2A6D;
+            --nitrosai-green: #00FF9D;
+            --nitrosai-gold: #FFB800;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            
+            --border-radius-sm: 12px;
+            --border-radius-md: 18px;
+            --border-radius-lg: 25px;
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .consensus-ring {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .central-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--nitrosai-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+
+        .validator-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--nitrosai-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        .connection-beam {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--nitrosai-blue), transparent);
+            transform-origin: left center;
+            opacity: 0;
+        }
+
+        /* Header - Fixed Layout */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            margin: 13px;
+            border-radius: var(--border-radius-lg);
+            background: rgba(10, 11, 20, 0.9);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--nitrosai-blue);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle, var(--nitrosai-blue) 0%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            background: linear-gradient(90deg, var(--nitrosai-blue), var(--nitrosai-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--nitrosai-blue);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--nitrosai-blue);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--nitrosai-blue);
+            color: var(--nitrosai-blue);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 245, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--nitrosai-blue);
+            color: var(--primary-dark);
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 245, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px; /* Added space for fixed header */
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch-1 0.5s infinite linear alternate-reverse;
+            color: var(--nitrosai-pink);
+            z-index: -1;
+        }
+
+        .glitch-text::after {
+            animation: glitch-2 0.5s infinite linear alternate-reverse;
+            color: var(--nitrosai-blue);
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        @keyframes glitch-2 {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(2px, -2px);
+            }
+            40% {
+                transform: translate(2px, 2px);
+            }
+            60% {
+                transform: translate(-2px, -2px);
+            }
+            80% {
+                transform: translate(-2px, 2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .hero-vision {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .vision-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .vision-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 245, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--nitrosai-blue);
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .vision-text {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-visualization {
+            position: relative;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #heroCanvas {
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 0 50px rgba(0, 245, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--nitrosai-blue), var(--nitrosai-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Whitepaper Section Styling */
+        .whitepaper-content {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            max-width: 900px;
+            margin: 100px auto 50px;
+            padding: 20px;
+            background-color: var(--primary-dark);
+        }
+
+        .whitepaper-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .whitepaper-content h1, .whitepaper-content h2, .whitepaper-content h3 {
+            color: var(--nitrosai-blue);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .whitepaper-content h1 {
+            text-align: center;
+            border-bottom: 2px solid var(--nitrosai-blue);
+            padding-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .whitepaper-content h2 {
+            border-left: 4px solid var(--nitrosai-blue);
+            padding-left: 15px;
+            font-size: 1.8rem;
+        }
+
+        .whitepaper-content h3 {
+            font-size: 1.4rem;
+            color: var(--nitrosai-purple);
+        }
+
+        .whitepaper-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .whitepaper-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+        }
+
+        .whitepaper-content th, .whitepaper-content td {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            text-align: left;
+        }
+
+        .whitepaper-content th {
+            background-color: rgba(0, 245, 255, 0.1);
+            color: var(--nitrosai-blue);
+            font-weight: 600;
+        }
+
+        .whitepaper-content tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .whitepaper-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .whitepaper-content li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .whitepaper-content strong {
+            color: var(--text-primary);
+        }
+
+        .whitepaper-content em {
+            color: var(--text-secondary);
+        }
+
+        .whitepaper-content hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--nitrosai-blue), transparent);
+            margin: 3rem 0;
+        }
+
+        .whitepaper-download-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(5, 6, 17, 0.7);
+            border-radius: var(--border-radius-lg);
+            margin: 3rem 0;
+        }
+
+        .whitepaper-download-section h2 {
+            color: var(--nitrosai-blue);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+
+        .whitepaper-download-section p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-docx {
+            background-color: var(--nitrosai-blue);
+            color: var(--primary-dark);
+        }
+
+        .btn-docx:hover {
+            background: rgba(0, 245, 255, 0.9);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+
+        .btn-html {
+            background-color: var(--nitrosai-purple);
+            color: white;
+        }
+
+        .btn-html:hover {
+            background: rgba(110, 68, 255, 0.9);
+            box-shadow: 0 0 20px rgba(110, 68, 255, 0.5);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--nitrosai-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--nitrosai-purple);
+        }
+
+        /* Ecosystem Section */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.8rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .ecosystem-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            padding: 2.2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .ecosystem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(110, 68, 255, 0.1));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .ecosystem-card:hover {
+            transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--nitrosai-blue);
+        }
+
+        .ecosystem-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.3rem;
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--nitrosai-blue);
+            font-size: 1.4rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.3rem;
+            line-height: 1.5;
+        }
+
+        .card-link {
+            color: var(--nitrosai-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .card-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Network Velocity Section */
+        .network-velocity {
+            background: rgba(5, 6, 17, 0.7);
+            padding: 4rem 0;
+            overflow: hidden;
+        }
+
+        .velocity-header {
+            max-width: 1200px;
+            margin: 0 auto 2.5rem;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .velocity-title {
+            font-size: 1.9rem;
+        }
+
+        .velocity-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .velocity-container {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            cursor: grab;
+        }
+
+        .velocity-container:active {
+            cursor: grabbing;
+        }
+
+        .velocity-track {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0 2rem;
+            width: max-content;
+        }
+
+        .velocity-item {
+            flex: 0 0 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .velocity-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--nitrosai-blue);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .velocity-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--nitrosai-blue);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .velocity-content {
+            color: var(--text-secondary);
+            margin-bottom: 1.3rem;
+            line-height: 1.5;
+        }
+
+        .velocity-date {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Blueprint Section - Fixed Layout */
+        .blueprint-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .blueprint-tab {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .blueprint-tab.active {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: var(--nitrosai-blue);
+            color: var(--nitrosai-blue);
+        }
+
+        .blueprint-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blueprint-panel {
+            display: none;
+        }
+
+        .blueprint-panel.active {
+            display: block;
+        }
+
+        .tokenomics-chart {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        #sunburstChart {
+            width: 350px;
+            height: 350px;
+        }
+
+        .tokenomics-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .tokenomics-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .tokenomics-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .tokenomics-info {
+            flex: 1;
+        }
+
+        .tokenomics-label {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .tokenomics-value {
+            color: var(--nitrosai-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .roadmap-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .roadmap-progress {
+            position: absolute;
+            left: 25px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--nitrosai-blue), var(--nitrosai-purple));
+        }
+
+        .roadmap-items {
+            position: relative;
+            z-index: 2;
+        }
+
+        .roadmap-item {
+            display: flex;
+            margin-bottom: 2.5rem;
+        }
+
+        .roadmap-marker {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.8rem;
+            flex-shrink: 0;
+            z-index: 3;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .roadmap-item.past .roadmap-marker {
+            background: var(--nitrosai-green);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.5);
+        }
+
+        .roadmap-item.present .roadmap-marker {
+            background: var(--nitrosai-blue);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        .roadmap-item.future .roadmap-marker {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .roadmap-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .roadmap-phase {
+            color: var(--nitrosai-blue);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .roadmap-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .roadmap-features {
+            list-style-type: none;
+        }
+
+        .roadmap-features li {
+            margin-bottom: 0.4rem;
+            padding-left: 1.3rem;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .roadmap-features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--nitrosai-blue);
+        }
+
+        /* Trust Section */
+        .trust-marquee {
+            overflow: hidden;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 3rem;
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .trust-item {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.3rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trust-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 245, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--nitrosai-blue);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .trust-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Core Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .value-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--nitrosai-blue);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .value-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.3rem;
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--nitrosai-blue);
+            font-size: 1.6rem;
+        }
+
+        .value-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .value-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        /* dApp Hub */
+        .dapp-hub {
+            background: rgba(5, 6, 17, 0.7);
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dapp-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+        }
+
+        .dapp-content {
+            z-index: 2;
+        }
+
+        .dapp-title {
+            font-size: 2.3rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .dapp-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .dapp-preview {
+            position: relative;
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-preview {
+            width: 100%;
+            height: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), transparent);
+            opacity: 0.5;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.8rem;
+        }
+
+        .preview-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.3rem;
+        }
+
+        .preview-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--nitrosai-blue);
+        }
+
+        .preview-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-darker);
+            padding: 3.5rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .network-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--nitrosai-green);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .status-text {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            max-width: 300px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .social-link {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 245, 255, 0.1);
+            color: var(--nitrosai-blue);
+        }
+
+        .footer-links h3 {
+            font-size: 1.15rem;
+            margin-bottom: 1.3rem;
+            color: var(--nitrosai-blue);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--nitrosai-blue);
+        }
+
+        .footer-bottom {
+            margin-top: 2.5rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: rgba(10, 11, 20, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: var(--border-radius-sm);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--nitrosai-green);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+        }
+
+        .toast-message {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .toast-timer {
+            height: 3px;
+            background: var(--nitrosai-blue);
+            border-radius: 2px;
+            width: 100%;
+            transform-origin: left;
+            animation: countdown 4s linear forwards;
+        }
+
+        @keyframes countdown {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content, .dapp-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+            
+            .ecosystem-grid, .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .header-actions {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.3rem;
+            }
+            
+            .tokenomics-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                margin-top: 70px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .dapp-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Utility Classes */
+        .text-gradient {
+            background: linear-gradient(90deg, var(--nitrosai-blue), var(--nitrosai-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 245, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+            }
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="consensus-ring">
+            <div class="central-logo"></div>
+            <!-- Validator nodes will be added via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <div class="logo-text">NITROSAI</div>
+        </div>
+        <nav class="nav-links">
+            <a href="#ecosystem" class="nav-link">Ecosystem</a>
+            <a href="#network" class="nav-link">Network</a>
+            <a href="#blueprint" class="nav-link">Blueprint</a>
+            <a href="#dapp" class="nav-link">dApp Hub</a>
+        </nav>
+        <div class="header-actions">
+            <a href="#whitepaper" class="btn btn-outline">Whitepaper</a>
+            <button class="btn btn-primary" id="connectWallet">Join Waitlist</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="glitch-text" data-text="NITROSAI">NITROSAI</span><br>
+                    <span>Blockchain Intelligence</span>
+                </h1>
+                <p class="hero-description">
+                    The next-generation AI-powered blockchain platform. Experience intelligent protocols, 
+                    predictive analytics, and a self-optimizing network that evolves with your needs.
+                </p>
+                <div class="hero-vision">
+                    <div class="vision-item">
+                        <div class="vision-icon">🚀</div>
+                        <div class="vision-text">Revolutionary AI-powered blockchain infrastructure</div>
+                    </div>
+                    <div class="vision-item">
+                        <div class="vision-icon">🔮</div>
+                        <div class="vision-text">Predictive analytics for optimized network performance</div>
+                    </div>
+                    <div class="vision-item">
+                        <div class="vision-icon">⚡</div>
+                        <div class="vision-text">High-speed transactions with minimal energy consumption</div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary">Join Waitlist</button>
+                    <a href="#whitepaper" class="btn btn-outline">Read Whitepaper</a>
+                </div>
+            </div>
+            <div class="hero-visualization">
+                <canvas id="heroCanvas" width="500" height="500"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Whitepaper Section -->
+    <section id="whitepaper" class="whitepaper-content">
+        <a href="#" class="back-link">&laquo; Back to Main Site</a>
+
+        <div class="whitepaper-download-section">
+            <h2>NitrosAI Whitepaper</h2>
+            <p>Download the official NitrosAI Whitepaper to learn about our technology, tokenomics, and roadmap. Choose your preferred format below.</p>
+            
+            <div class="download-buttons">
+                <a href="/whitepaper/NitrosAI.docx" class="btn btn-docx" download>
+                    Download DOCX
+                </a>
+                <a href="#whitepaper-content" class="btn btn-html">
+                    Read Online (HTML)
+                </a>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-tertiary);">
+                <strong>DOCX</strong> - Best for printing and offline reading.<br>
+                <strong>HTML</strong> - Read instantly in your browser.
+            </p>
+        </div>
+
+        <div class="whitepaper-container" id="whitepaper-content">
+            <!-- Whitepaper Content Starts -->
+            <h1><span style="text-decoration: underline;">NITROSAI WHITEPAPER</span></h1>
+
+            <h2>1. Abstract</h2>
+            <p>NitrosAI is an AI-integrated blockchain ecosystem built on Ethereum, combining advanced artificial intelligence with decentralized finance (DeFi) mechanics. Designed to democratize access to intelligent trading, analytics, and staking, NitrosAI empowers users to interact with crypto markets using automated insights, predictive AI tools, and trustless smart contracts. Through the $NITRO token, users can stake, govern, and access AI-powered tools that optimize decision-making and reward participation, establishing a seamless bridge between machine intelligence and decentralized finance.</p>
+            <hr>
+
+            <h2>2. Introduction</h2>
+            <h3>The Problem</h3>
+            <p>The crypto and DeFi sectors face challenges of <em>data overload, lack of intelligent automation,</em> and <em>low accessibility for non-technical users.</em> Retail investors often miss opportunities due to fragmented data sources and the absence of unified AI-driven analytics. Moreover, staking and governance systems remain static and detached from adaptive intelligence.</p>
+
+            <h3>The Solution</h3>
+            <p><strong>NitrosAI</strong> introduces a unified AI-blockchain framework designed to revolutionize how users interact with digital assets. By integrating artificial intelligence into decentralized protocols, NitrosAI offers intelligent staking optimization, automated portfolio insights, and AI-assisted governance participation — all secured by Ethereum's robust smart contract infrastructure.</p>
+            <hr>
+
+            <h2>3. Technology & Architecture</h2>
+            <h3>Core Blockchain</h3>
+            <p>Built on <strong>Ethereum</strong>, NitrosAI leverages Ethereum's mature ecosystem, robust developer tools, and wide interoperability. The ERC-20 standard ensures seamless integration with wallets, DEXs, and DeFi protocols, while maintaining high security and auditability.</p>
+
+            <h3>Consensus Mechanism</h3>
+            <p>NitrosAI inherits <strong>Proof-of-Stake (PoS)</strong> security from Ethereum, ensuring energy efficiency and decentralization. The staking mechanism within NitrosAI augments this with AI-based yield optimization for token holders.</p>
+
+            <h3>Key Technical Innovations</h3>
+            <ul>
+                <li><strong>AI-Driven Staking Engine:</strong> Uses machine learning models to adjust staking yields dynamically based on market conditions and network parameters.</li>
+                <li><strong>Predictive Market Analytics:</strong> Employs natural language processing (NLP) and neural forecasting to analyze sentiment and on-chain data.</li>
+                <li><strong>Adaptive Governance System:</strong> AI evaluates proposal impacts and offers data-backed recommendations for community voting.</li>
+                <li><strong>Smart Contract Security Layer:</strong> Implements automated anomaly detection for transaction validation.</li>
+            </ul>
+
+            <h3>Smart Contract Overview</h3>
+            <ul>
+                <li><strong>Token Contract:</strong> ERC-20 compliant contract managing $NITRO supply, transfers, and burn/mint functionalities.</li>
+                <li><strong>Staking Contract:</strong> Enables token holders to stake $NITRO and earn AI-optimized yields.</li>
+                <li><strong>Governance Contract:</strong> Allows community voting on proposals with weighted influence based on staking duration.</li>
+                <li><strong>Analytics Oracle Contract:</strong> Connects off-chain AI data to on-chain contracts securely.</li>
+            </ul>
+            <hr>
+
+            <h2>4. Tokenomics – The $NITRO Token</h2>
+            <h3>Token Utility</h3>
+            <ul>
+                <li><strong>Staking:</strong> Stake $NITRO to earn dynamic AI-optimized yields.</li>
+                <li><strong>Governance:</strong> Participate in DAO voting and influence ecosystem evolution.</li>
+                <li><strong>Access:</strong> Unlock premium AI tools, analytics dashboards, and early access features.</li>
+                <li><strong>Rewards:</strong> Earn $NITRO for contributions, data validation, and community participation.</li>
+            </ul>
+
+            <p><strong>Total Supply: 1,000,000,000 (Fixed Supply)</strong></p>
+
+            <h3>Token Distribution</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Allocation</th>
+                        <th>Vesting / Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Team</strong></td>
+                        <td>15%</td>
+                        <td>4-year vesting, 1-year cliff</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Advisors</strong></td>
+                        <td>5%</td>
+                        <td>2-year vesting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Public Sale</strong></td>
+                        <td>20%</td>
+                        <td>Available during launch</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Private/Seed Sale</strong></td>
+                        <td>15%</td>
+                        <td>Locked for 6 months post-launch</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ecosystem/Treasury</strong></td>
+                        <td>25%</td>
+                        <td>Development, partnerships, marketing, grants</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Liquidity & Exchanges</strong></td>
+                        <td>10%</td>
+                        <td>DEX/CEX listings, liquidity pools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Staking Rewards</strong></td>
+                        <td>10%</td>
+                        <td>Distributed through staking mechanisms</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+
+            <h2>5. Roadmap</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Timeline</th>
+                        <th>Milestones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Phase 1 -- Foundation</strong></td>
+                        <td>Q4 2025</td>
+                        <td>Concept validation, prototype AI model integration, smart contract architecture design.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phase 2 -- Development</strong></td>
+                        <td>Q1 2026</td>
+                        <td>Testnet deployment, initial audits, AI engine training, token generation event (TGE).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phase 3 -- Launch</strong></td>
+                        <td>Q2 2026</td>
+                        <td>Mainnet release, staking platform live, public sale, listing on Uniswap & CEX partners.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phase 4 -- Expansion</strong></td>
+                        <td>Q3-Q4 2026</td>
+                        <td>AI marketplace integration, DAO governance activation, cross-chain bridges (BSC, Polygon).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phase 5 -- Future</strong></td>
+                        <td>2027+</td>
+                        <td>NitrosAI 2.0: Fully autonomous AI-driven DeFi ecosystem, multi-chain AI trading layer, global partnerships.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+
+            <h2>6. Team & Advisors</h2>
+            <p>The <strong>NitrosAI Core Team</strong> comprises blockchain engineers, AI researchers, and fintech strategists with deep experience in decentralized systems and artificial intelligence.</p>
+            <p><em>The NitrosAI team has opted for semi-anonymity to uphold decentralization principles, ensuring the project's focus remains on community governance and open innovation.</em></p>
+            <p>Advisors include industry experts from blockchain analytics, DeFi protocol design, and AI infrastructure development.</p>
+            <hr>
+
+            <h2>7. Conclusion</h2>
+            <p><strong>NitrosAI</strong> stands at the intersection of artificial intelligence and decentralized finance, pioneering a future where blockchain systems evolve intelligently with their users. With its AI-powered staking, adaptive governance, and predictive analytics, NitrosAI aims to redefine digital asset interaction—creating a self-improving, community-governed AI ecosystem that empowers every participant.</p>
+            <hr>
+
+            <h2>8. Disclaimer</h2>
+            <p>This whitepaper is for informational purposes only and does not constitute financial advice, investment solicitation, or a guarantee of returns. Participation in token sales involves risk, and readers should conduct their own due diligence or consult financial professionals before participating.</p>
+            <!-- Whitepaper Content Ends -->
+        </div>
+        
+        <a href="#" class="back-link" style="display: block; text-align: center; margin-top: 20px;">&laquo; Back to Top</a>
+    </section>
+
+    <!-- Ecosystem Section -->
+    <section id="ecosystem" class="section">
+        <div class="section-header">
+            <h2 class="section-title">NitrosAI Ecosystem</h2>
+            <p class="section-subtitle">A comprehensive suite of AI-powered blockchain solutions</p>
+        </div>
+        <div class="ecosystem-grid">
+            <div class="ecosystem-card">
+                <div class="card-icon">🤖</div>
+                <h3 class="card-title">AI Protocols</h3>
+                <p class="card-description">
+                    Advanced AI algorithms that optimize network performance, security, and efficiency 
+                    through continuous learning and adaptation.
+                </p>
+                <a href="#" class="card-link">
+                    Learn more <span>→</span>
+                </a>
+            </div>
+            <div class="ecosystem-card">
+                <div class="card-icon">🌐</div>
+                <h3 class="card-title">Predictive Analytics</h3>
+                <p class="card-description">
+                    Access advanced market predictions and network insights powered by our 
+                    proprietary AI algorithms and machine learning models.
+                </p>
+                <a href="#" class="card-link">
+                    Learn more <span>→</span>
+                </a>
+            </div>
+            <div class="ecosystem-card">
+                <div class="card-icon">🔐</div>
+                <h3 class="card-title">Secure Governance</h3>
+                <p class="card-description">
+                    Participate in network decisions with our transparent, AI-assisted 
+                    governance system that ensures fair and efficient protocol upgrades.
+                </p>
+                <a href="#" class="card-link">
+                    Learn more <span>→</span>
+                </a>
+            </div>
+            <div class="ecosystem-card">
+                <div class="card-icon">⚡</div>
+                <h3 class="card-title">High-Speed Network</h3>
+                <p class="card-description">
+                    Experience lightning-fast transactions with our optimized consensus mechanism 
+                    that scales efficiently while maintaining security.
+                </p>
+                <a href="#" class="card-link">
+                    Learn more <span>→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network Velocity Section -->
+    <section id="network" class="network-velocity">
+        <div class="velocity-header">
+            <h2 class="velocity-title">Network Development</h2>
+            <div class="velocity-controls">
+                <button class="btn btn-outline">View All Updates</button>
+            </div>
+        </div>
+        <div class="velocity-container" id="velocityContainer">
+            <div class="velocity-track">
+                <div class="velocity-item">
+                    <span class="velocity-category">Development</span>
+                    <h3 class="velocity-title">Core Protocol v1.0</h3>
+                    <p class="velocity-content">
+                        Completed development of the foundational NitrosAI blockchain protocol with 
+                        integrated AI optimization layers.
+                    </p>
+                    <div class="velocity-date">June 15, 2023</div>
+                </div>
+                <div class="velocity-item">
+                    <span class="velocity-category">Research</span>
+                    <h3 class="velocity-title">AI Consensus Paper</h3>
+                    <p class="velocity-content">
+                        Published groundbreaking research on AI-enhanced consensus mechanisms 
+                        for improved network efficiency.
+                    </p>
+                    <div class="velocity-date">May 28, 2023</div>
+                </div>
+                <div class="velocity-item">
+                    <span class="velocity-category">Partnership</span>
+                    <h3 class="velocity-title">Research Collaboration</h3>
+                    <p class="velocity-content">
+                        Established research partnership with leading AI institute to advance 
+                        blockchain intelligence capabilities.
+                    </p>
+                    <div class="velocity-date">April 12, 2023</div>
+                </div>
+                <div class="velocity-item">
+                    <span class="velocity-category">Development</span>
+                    <h3 class="velocity-title">Testnet Architecture</h3>
+                    <p class="velocity-content">
+                        Finalized architecture for the upcoming NitrosAI testnet with integrated 
+                        AI monitoring and optimization.
+                    </p>
+                    <div class="velocity-date">March 30, 2023</div>
+                </div>
+                <div class="velocity-item">
+                    <span class="velocity-category">Team</span>
+                    <h3 class="velocity-title">Core Team Expansion</h3>
+                    <p class="velocity-content">
+                        Welcomed 5 new AI researchers and blockchain engineers to the core 
+                        development team.
+                    </p>
+                    <div class="velocity-date">February 18, 2023</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blueprint Section -->
+    <section id="blueprint" class="section">
+        <div class="section-header">
+            <h2 class="section-title">NitrosAI Blueprint</h2>
+            <p class="section-subtitle">Transparent tokenomics and our strategic roadmap</p>
+        </div>
+        <div class="blueprint-tabs">
+            <button class="blueprint-tab active" data-tab="tokenomics">Tokenomics</button>
+            <button class="blueprint-tab" data-tab="roadmap">Roadmap</button>
+        </div>
+        <div class="blueprint-content">
+            <div class="blueprint-panel active" id="tokenomics-panel">
+                <div class="tokenomics-chart">
+                    <canvas id="sunburstChart" width="400" height="400"></canvas>
+                </div>
+                <div class="tokenomics-details">
+                    <div class="tokenomics-item">
+                        <div class="tokenomics-color" style="background: #00F5FF;"></div>
+                        <div class="tokenomics-info">
+                            <div class="tokenomics-label">Ecosystem & Development</div>
+                            <div class="tokenomics-value">40% - 400M NITROS</div>
+                        </div>
+                    </div>
+                    <div class="tokenomics-item">
+                        <div class="tokenomics-color" style="background: #6E44FF;"></div>
+                        <div class="tokenomics-info">
+                            <div class="tokenomics-label">Network Incentives</div>
+                            <div class="tokenomics-value">25% - 250M NITROS</div>
+                        </div>
+                    </div>
+                    <div class="tokenomics-item">
+                        <div class="tokenomics-color" style="background: #FF2A6D;"></div>
+                        <div class="tokenomics-info">
+                            <div class="tokenomics-label">Team & Advisors</div>
+                            <div class="tokenomics-value">15% - 150M NITROS</div>
+                        </div>
+                    </div>
+                    <div class="tokenomics-item">
+                        <div class="tokenomics-color" style="background: #00FF9D;"></div>
+                        <div class="tokenomics-info">
+                            <div class="tokenomics-label">Liquidity & Exchange</div>
+                            <div class="tokenomics-value">12% - 120M NITROS</div>
+                        </div>
+                    </div>
+                    <div class="tokenomics-item">
+                        <div class="tokenomics-color" style="background: #FFB800;"></div>
+                        <div class="tokenomics-info">
+                            <div class="tokenomics-label">Community & Marketing</div>
+                            <div class="tokenomics-value">8% - 80M NITROS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blueprint-panel" id="roadmap-panel">
+                <div class="roadmap-container">
+                    <div class="roadmap-progress"></div>
+                    <div class="roadmap-items">
+                        <div class="roadmap-item past">
+                            <div class="roadmap-marker">Q4<br>2023</div>
+                            <div class="roadmap-content">
+                                <div class="roadmap-phase">Protocol Foundation</div>
+                                <h3 class="roadmap-title">Core Development & Research</h3>
+                                <ul class="roadmap-features">
+                                    <li>Blockchain Architecture Design</li>
+                                    <li>AI Integration Research</li>
+                                    <li>Team Formation</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="roadmap-item present">
+                            <div class="roadmap-marker">Q1<br>2024</div>
+                            <div class="roadmap-content">
+                                <div class="roadmap-phase">Testnet Launch</div>
+                                <h3 class="roadmap-title">Network Testing & Optimization</h3>
+                                <ul class="roadmap-features">
+                                    <li>Public Testnet Deployment</li>
+                                    <li>AI Protocol Integration</li>
+                                    <li>Security Audits</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="roadmap-item future">
+                            <div class="roadmap-marker">Q3<br>2024</div>
+                            <div class="roadmap-content">
+                                <div class="roadmap-phase">Mainnet Launch</div>
+                                <h3 class="roadmap-title">Ecosystem Deployment</h3>
+                                <ul class="roadmap-features">
+                                    <li>Mainnet Launch</li>
+                                    <li>Token Generation Event</li>
+                                    <li>Initial DApp Integrations</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="roadmap-item future">
+                            <div class="roadmap-marker">2025</div>
+                            <div class="roadmap-content">
+                                <div class="roadmap-phase">Ecosystem Growth</div>
+                                <h3 class="roadmap-title">Global Expansion & Scaling</h3>
+                                <ul class="roadmap-features">
+                                    <li>Cross-Chain Integration</li>
+                                    <li>Enterprise Solutions</li>
+                                    <li>Global Community Growth</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Research Partners & Advisors</h2>
+            <p class="section-subtitle">Collaborating with leading institutions in AI and blockchain research</p>
+        </div>
+        <div class="trust-marquee">
+            <div class="marquee-track">
+                <div class="trust-item">
+                    <div class="trust-logo">AI</div>
+                    <div class="trust-name">AI Research Lab</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">BC</div>
+                    <div class="trust-name">Blockchain Institute</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">TC</div>
+                    <div class="trust-name">Tech University</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">DA</div>
+                    <div class="trust-name">Digital Innovation Hub</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">CR</div>
+                    <div class="trust-name">Crypto Research Group</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">AI</div>
+                    <div class="trust-name">AI Research Lab</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">BC</div>
+                    <div class="trust-name">Blockchain Institute</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-logo">TC</div>
+                    <div class="trust-name">Tech University</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Core Values</h2>
+            <p class="section-subtitle">The principles that drive the NitrosAI ecosystem</p>
+        </div>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🔒</div>
+                <h3 class="value-title">Secure</h3>
+                <p class="value-description">
+                    Military-grade encryption and decentralized architecture ensure your assets and data remain protected.
+                </p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">⚡</div>
+                <h3 class="value-title">Scalable</h3>
+                <p class="value-description">
+                    Our sharded blockchain architecture supports thousands of transactions per second with minimal fees.
+                </p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🤖</div>
+                <h3 class="value-title">Intelligent</h3>
+                <p class="value-description">
+                    AI-powered algorithms optimize network performance, security, and user experience automatically.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- dApp Hub Section -->
+    <section id="dapp" class="dapp-hub">
+        <div class="dapp-container">
+            <div class="dapp-content">
+                <h2 class="dapp-title">Join the NitrosAI Revolution</h2>
+                <p class="dapp-description">
+                    Be among the first to experience the next generation of blockchain intelligence. 
+                    Join our waitlist for early access to the testnet and exclusive updates.
+                </p>
+                <button class="btn btn-primary" id="connectDapp">Join Waitlist</button>
+            </div>
+            <div class="dapp-preview">
+                <div class="dashboard-preview">
+                    <div class="preview-header">
+                        <div class="preview-title">Coming Soon</div>
+                        <div class="preview-status">Early Access</div>
+                    </div>
+                    <div class="preview-stats">
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">AI-Powered</div>
+                            <div class="preview-stat-label">Network Intelligence</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">Predictive</div>
+                            <div class="preview-stat-label">Analytics Engine</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">High-Speed</div>
+                            <div class="preview-stat-label">Transactions</div>
+                        </div>
+                        <div class="preview-stat">
+                            <div class="preview-stat-value">Secure</div>
+                            <div class="preview-stat-label">Governance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="network-status">
+                <div class="status-indicator"></div>
+                <div class="status-text">Development Status: Active</div>
+            </div>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon"></div>
+                        <div class="logo-text">NITROSAI</div>
+                    </div>
+                    <p class="footer-description">
+                        The next-generation AI-powered blockchain platform revolutionizing decentralized intelligence.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">T</a>
+                        <a href="#" class="social-link">D</a>
+                        <a href="#" class="social-link">G</a>
+                        <a href="#" class="social-link">M</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#">Protocol</a></li>
+                        <li><a href="#">Technology</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                        <li><a href="#whitepaper">Whitepaper</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Research</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 NitrosAI. All rights reserved. Built on intelligent principles.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <div class="toast-icon">✓</div>
+            <div class="toast-message">Added to waitlist successfully</div>
+        </div>
+        <div class="toast-timer"></div>
+    </div>
+
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <script>
+        // Preloader Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('preloader');
+            const consensusRing = document.querySelector('.consensus-ring');
+            const nodeCount = 8;
+            const radius = 80;
+            
+            // Create validator nodes
+            for (let i = 0; i < nodeCount; i++) {
+                const angle = (i / nodeCount) * 2 * Math.PI;
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
+                
+                const node = document.createElement('div');
+                node.className = 'validator-node';
+                node.style.left = `calc(50% + ${x}px)`;
+                node.style.top = `calc(50% + ${y}px)`;
+                
+                const beam = document.createElement('div');
+                beam.className = 'connection-beam';
+                beam.style.left = '50%';
+                beam.style.top = '50%';
+                beam.style.width = `${radius}px`;
+                beam.style.transform = `rotate(${angle}rad)`;
+                
+                consensusRing.appendChild(node);
+                consensusRing.appendChild(beam);
+                
+                // Animate nodes and beams with delay
+                setTimeout(() => {
+                    node.style.opacity = '1';
+                    node.style.transform = 'translate(-50%, -50%) scale(1)';
+                    
+                    setTimeout(() => {
+                        beam.style.opacity = '1';
+                        beam.style.width = `${radius}px`;
+                    }, 300);
+                }, i * 400);
+            }
+            
+            // Hide preloader after animation
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, (nodeCount * 400) + 1000);
+        });
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Hero Canvas Visualization
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        // Set canvas size
+        heroCanvas.width = 500;
+        heroCanvas.height = 500;
+        
+        // Particle system for hero visualization
+        const particles = [];
+        const particleCount = 100;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * heroCanvas.width,
+                y: Math.random() * heroCanvas.height,
+                size: Math.random() * 2 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                color: `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 155)}, 255, ${Math.random() * 0.5 + 0.1})`
+            });
+        }
+        
+        function animateHero() {
+            heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+            
+            // Draw central orb
+            const gradient = heroCtx.createRadialGradient(
+                heroCanvas.width / 2, heroCanvas.height / 2, 0,
+                heroCanvas.width / 2, heroCanvas.height / 2, 150
+            );
+            gradient.addColorStop(0, 'rgba(0, 245, 255, 0.8)');
+            gradient.addColorStop(1, 'rgba(0, 245, 255, 0)');
+            
+            heroCtx.beginPath();
+            heroCtx.arc(heroCanvas.width / 2, heroCanvas.height / 2, 150, 0, Math.PI * 2);
+            heroCtx.fillStyle = gradient;
+            heroCtx.fill();
+            
+            // Update and draw particles
+            particles.forEach(particle => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Wrap around edges
+                if (particle.x < 0) particle.x = heroCanvas.width;
+                if (particle.x > heroCanvas.width) particle.x = 0;
+                if (particle.y < 0) particle.y = heroCanvas.height;
+                if (particle.y > heroCanvas.height) particle.y = 0;
+                
+                // Draw particle
+                heroCtx.beginPath();
+                heroCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                heroCtx.fillStyle = particle.color;
+                heroCtx.fill();
+            });
+            
+            requestAnimationFrame(animateHero);
+        }
+        
+        animateHero();
+
+        // Blueprint Tabs - Fixed Functionality
+        const blueprintTabs = document.querySelectorAll('.blueprint-tab');
+        const blueprintPanels = document.querySelectorAll('.blueprint-panel');
+        
+        blueprintTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                blueprintTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show target panel, hide others
+                blueprintPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                    if (panel.id === `${target}-panel`) {
+                        panel.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Sunburst Chart
+        const sunburstCanvas = document.getElementById('sunburstChart');
+        const sunburstCtx = sunburstCanvas.getContext('2d');
+        
+        // Set canvas size
+        sunburstCanvas.width = 350;
+        sunburstCanvas.height = 350;
+        
+        // Draw sunburst chart
+        const data = [
+            { label: 'Ecosystem', value: 40, color: '#00F5FF' },
+            { label: 'Network Incentives', value: 25, color: '#6E44FF' },
+            { label: 'Team', value: 15, color: '#FF2A6D' },
+            { label: 'Liquidity', value: 12, color: '#00FF9D' },
+            { label: 'Community', value: 8, color: '#FFB800' }
+        ];
+        
+        let startAngle = 0;
+        const centerX = sunburstCanvas.width / 2;
+        const centerY = sunburstCanvas.height / 2;
+        const radius = 130;
+        
+        data.forEach(item => {
+            const sliceAngle = (item.value / 100) * 2 * Math.PI;
+            
+            sunburstCtx.beginPath();
+            sunburstCtx.moveTo(centerX, centerY);
+            sunburstCtx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+            sunburstCtx.closePath();
+            
+            sunburstCtx.fillStyle = item.color;
+            sunburstCtx.fill();
+            
+            startAngle += sliceAngle;
+        });
+        
+        // Draw inner circle
+        sunburstCtx.beginPath();
+        sunburstCtx.arc(centerX, centerY, 60, 0, Math.PI * 2);
+        sunburstCtx.fillStyle = '#0A0B14';
+        sunburstCtx.fill();
+
+        // Network Velocity Horizontal Scroll
+        const velocityContainer = document.getElementById('velocityContainer');
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+        
+        velocityContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - velocityContainer.offsetLeft;
+            scrollLeft = velocityContainer.scrollLeft;
+            velocityContainer.style.cursor = 'grabbing';
+        });
+        
+        velocityContainer.addEventListener('mouseleave', () => {
+            isDragging = false;
+            velocityContainer.style.cursor = 'grab';
+        });
+        
+        velocityContainer.addEventListener('mouseup', () => {
+            isDragging = false;
+            velocityContainer.style.cursor = 'grab';
+        });
+        
+        velocityContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - velocityContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            velocityContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        // Toast Notification
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+        
+        // Waitlist Buttons
+        const waitlistButtons = document.querySelectorAll('#connectWallet, #connectDapp');
+        waitlistButtons.forEach(button => {
+            button.addEventListener('click', showToast);
+        });
+
+        // Particle.js Background
+        const particlesContainer = document.getElementById('particles-js');
+        const particlesCanvas = document.createElement('canvas');
+        particlesContainer.appendChild(particlesCanvas);
+        const pCtx = particlesCanvas.getContext('2d');
+        
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+        
+        const bgParticles = [];
+        const bgParticleCount = 50;
+        
+        for (let i = 0; i < bgParticleCount; i++) {
+            bgParticles.push({
+                x: Math.random() * particlesCanvas.width,
+                y: Math.random() * particlesCanvas.height,
+                size: Math.random() * 1.5 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.2,
+                speedY: (Math.random() - 0.5) * 0.2,
+                color: `rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05})`
+            });
+        }
+        
+        function animateBackground() {
+            pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            
+            bgParticles.forEach(particle => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Wrap around edges
+                if (particle.x < 0) particle.x = particlesCanvas.width;
+                if (particle.x > particlesCanvas.width) particle.x = 0;
+                if (particle.y < 0) particle.y = particlesCanvas.height;
+                if (particle.y > particlesCanvas.height) particle.y = 0;
+                
+                // Draw particle
+                pCtx.beginPath();
+                pCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                pCtx.fillStyle = particle.color;
+                pCtx.fill();
+            });
+            
+            requestAnimationFrame(animateBackground);
+        }
+        
+        animateBackground();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+        });
+
+        // Glitch Text Effect
+        const glitchText = document.querySelector('.glitch-text');
+        let glitchInterval;
+        
+        function startGlitch() {
+            glitchInterval = setInterval(() => {
+                glitchText.style.animation = 'none';
+                setTimeout(() => {
+                    glitchText.style.animation = '';
+                }, 10);
+            }, 3000);
+        }
+        
+        startGlitch();
+    </script>
+</body>
+</html>
